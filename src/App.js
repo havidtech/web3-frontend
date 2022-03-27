@@ -50,7 +50,7 @@ function App() {
       const userBRTBalance = await BRTContractInstance.balanceOf(address);
 
       // Get total staked
-      const userStake = await BRTContractInstance.getStakeByAddress("0x845dA5011f60dF971025E48b831D61f0f7662674");
+      const userStake = await BRTContractInstance.getStakeByAddress(address);
       
       // Calculate stake reward
       const daySpent = Date.now() - (userStake.time * 1000);
