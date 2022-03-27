@@ -6,7 +6,7 @@ import {useState, useEffect} from 'react'
 import Footer from './components/Footer/Footer';
 import { ethers, utils, Contract } from 'ethers';
 import BRTTokenAbi from './utils/web3/abi.json'
-import { formatDate } from './utils/helpers';
+import { addressShortner, formatDate } from './utils/helpers';
 
 const BRTTokenAddress = "0x169E82570feAc981780F3C48Ee9f05CED1328e1b";
 
@@ -255,9 +255,9 @@ function App() {
     const userStake = await BRTContractInstance.getStakeByAddress(stakerAddressInput);
     alert(`
             Time of Stake: ${formatDate(userStake.time)} \n
-            Address: ${utils.formatEther(userStake.staker)} \n 
+            Address: ${addressShortner(userStake.staker)} \n 
             Total Stake: ${utils.formatEther(userStake.stakeAmount)} \n
-            Validity: ${formatDate(userStake.valid)}
+            Validity: ${userStake.valid}
     `);
   }
   
