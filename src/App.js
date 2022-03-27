@@ -199,15 +199,22 @@ function App() {
     const address = response.events[1].args[0]
     const amountStaked = response.events[1].args[1].toString()
     const time = response.events[1].args[2].toString()
-
     
   }
 
-  const onClickWithdraw = (e) => {
+  // A function that handles unstaking
+  const onClickWithdraw = async (e) => {
     e.preventDefault()
-    console.log("unstaking...........", withdrawInput);
-  }
+    if(withdrawInput < 0) return alert("you cannot stake withdraw than 0 BRT");
 
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const BRTContractInstance = new Contract(BRTTokenAddress, BRTTokenAbi, signer);
+    const weiValue = utils.parseEther(stakeInput);
+    const withdrawTx = await BRTContractInstance.withdraw(weiValue);
+
+    await withdrawTx.wait();
+  }
   
   return (
     <div className="App">
