@@ -52,6 +52,17 @@
     cursor: pointer;
 }
 
+.checkStake_btn {
+    padding: .8rem 1.2rem;
+    border: 0;
+    background-color: rgb(54, 42, 165);
+    border-radius: .3rem;
+    margin-left: 1rem;
+    width: 6rem;
+    color: #fff;
+    cursor: pointer;
+}
+
 .btn_diabled {
     background-color: rgb(168, 164, 164);
     cursor: not-allowed;;

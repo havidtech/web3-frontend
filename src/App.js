@@ -6,6 +6,8 @@ import {useState, useEffect} from 'react'
 import Footer from './components/Footer/Footer';
 import { ethers, utils, Contract } from 'ethers';
 import BRTTokenAbi from './utils/web3/abi.json'
+import { formatDate } from './utils/helpers';
+
 const BRTTokenAddress = "0x169E82570feAc981780F3C48Ee9f05CED1328e1b";
 
 function App() {
@@ -32,6 +34,9 @@ function App() {
 
   // the value of token the user wants to withdraw
   const [withdrawInput, setWithdrawInput] = useState("");
+
+  // the address of staker whose total stake user wants to see
+  const [stakerAddressInput, setStakerAddressInput] = useState("");
 
   // all stake history data displayed on the history table
   const [stateHistory, setStakeHistory] = useState([]);
@@ -193,6 +198,10 @@ function App() {
       case "unstake":
         setWithdrawInput(target.value);
         break;
+
+      case "checkStake":
+        setStakerAddressInput(target.value);
+        break;
     
       default:
         break;
@@ -232,6 +241,23 @@ function App() {
 
     await withdrawTx.wait();
   }
+
+  // A function that handles displaying stake of any user
+  const onClickCheckStake = async (e) => {
+    e.preventDefault()
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const BRTContractInstance = new Contract(BRTTokenAddress, BRTTokenAbi, provider);
+
+    // Get stake
+    const userStake = await BRTContractInstance.getStakeByAddress(stakerAddressInput);
+    alert(`
+            Time of Stake: ${formatDate(userStake.time)} \n
+            Address: ${utils.formatEther(userStake.staker)} \n 
+            Total Stake: ${utils.formatEther(userStake.stakeAmount)} \n
+            Validity: ${formatDate(userStake.valid)}
+    `);
+  }
   
   return (
     <div className="App">
@@ -244,9 +270,11 @@ function App() {
         <MyStake
           stakeInput = {stakeInput}
           withdrawInput = {withdrawInput}
+          stakerAddressInput = {stakerAddressInput}
           onChangeInput = {onChangeInput}
           onClickStake = {onClickStake}
           onClickWithdraw = {onClickWithdraw}
+          onClickCheckStake = {onClickCheckStake}
           stakeAmount = {stakeAmount}
           rewardAmount = {rewardAmount}
           connected = {connected}

@@ -6,9 +6,11 @@ import Styles from './MyStake.module.css'
 const MyStake = ({
   withdrawInput, 
   stakeInput, 
+  stakerAddressInput,
   onChangeInput, 
   onClickStake, 
   onClickWithdraw,
+  onClickCheckStake,
   rewardAmount,
   stakeAmount,
   connected
@@ -55,6 +57,19 @@ const MyStake = ({
             className={clsx({[Styles.unstake_btn]: true, [Styles.btn_diabled]: !connected})}
             disabled = {!connected}
             >Unstake</button>
+          </form>
+
+          <form onSubmit = {onClickCheckStake} className={Styles.form} >
+            <input 
+              placeholder="Address of staker" 
+              className={Styles.input}
+              value = {stakerAddressInput}
+              onChange = {onChangeInput}
+              id = "checkStake"
+            />
+            <button type="submit"
+            className={Styles.checkStake_btn}
+            >View</button>
           </form>
         </div>
     </div>
