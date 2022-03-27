@@ -49,7 +49,7 @@ function App() {
       
       // Calculate stake reward
       const daySpent = Date.now() - (userStake.time * 1000);
-      const reward = ((userStake.stakeAmount * (daySpent / 86400000)) / 300)
+      const reward = ((userStake.stakeAmount * (daySpent / 86400000)) / 300);
       
       return {userBRTBalance, userMaticBal, userTotalStake: utils.formatEther(userStake.stakeAmount), userTotalReward: utils.formatEther(reward).substring(0, 6)};
     }catch(err) {
