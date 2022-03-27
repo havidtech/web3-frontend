@@ -42,8 +42,16 @@ function App() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const userMaticBal = await provider.getBalance(address);
       const BRTContractInstance = new Contract(BRTTokenAddress, BRTTokenAbi, provider);
-      const userBRTBalance = await BRTContractInstance.balanceOf(address)
-      return {userBRTBalance, userMaticBal}
+      const userBRTBalance = await BRTContractInstance.balanceOf(address);
+
+      // Get total staked
+      const userStake = await BRTContractInstance.getStakeByAddress("0x845dA5011f60dF971025E48b831D61f0f7662674");
+      
+      // Calculate stake reward
+      const daySpent = Date.now() - (userStake.time * 1000);
+      const reward = ((userStake.stakeAmount * (daySpent / 86400000)) / 300)
+      
+      return {userBRTBalance, userMaticBal, userTotalStake: utils.formatEther(userStake.stakeAmount), userTotalReward: utils.formatEther(reward).substring(0, 6)};
     }catch(err) {
       console.log(err)
     }
@@ -61,6 +69,8 @@ function App() {
         token_balance: accountDetails.userBRTBalance,
         address: accounts[0]
       })
+      setStakeAmount(accountDetails.userTotalStake);
+      setRewardAmount(accountDetails.userTotalReward);
       setConnected(true)
     }else {
       setConnected(false)
@@ -69,7 +79,8 @@ function App() {
         token_balance: 0,
         address: null
       })
-      
+      setStakeAmount(0);
+      setRewardAmount(0);            
     }
   }
 
@@ -82,6 +93,8 @@ function App() {
         token_balance: 0,
         address: null
       })
+      setStakeAmount(0);
+      setRewardAmount(0);
       
       return alert("You are connected to the wrong network, please switch to polygon mumbai")
     }else {
@@ -94,6 +107,8 @@ function App() {
           token_balance: accountDetails.userBRTBalance,
           address: accounts[0]
         })
+        setStakeAmount(accountDetails.userTotalStake);
+        setRewardAmount(accountDetails.userTotalReward);
         setConnected(true)
       }
   }
@@ -111,7 +126,9 @@ function App() {
         token_balance: accountDetails.userBRTBalance,
         address: accounts[0]
       })
-      setConnected(true)
+      setStakeAmount(accountDetails.userTotalStake);
+      setRewardAmount(accountDetails.userTotalReward);
+      setConnected(true);
   }
 
   // a function for fetching necesary data from the contract and also listening for contract event when the page loads
