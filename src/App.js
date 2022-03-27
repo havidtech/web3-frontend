@@ -219,12 +219,11 @@ function App() {
     const weiValue = utils.parseEther(stakeInput);
     const stakeTx = await BRTContractInstance.stakeBRT(weiValue);
 
-    const stakeTxHash = await provider.getTransaction(stakeTx.hash)
-    const response = await stakeTx.wait();
+    await provider.getTransaction(stakeTx.hash)
+    stakeTx.wait();
 
-    const address = response.events[1].args[0]
-    const amountStaked = response.events[1].args[1].toString()
-    const time = response.events[1].args[2].toString()
+    // Get new balances
+    await getAccountDetails(signer._address);
     
   }
 
@@ -240,6 +239,9 @@ function App() {
     const withdrawTx = await BRTContractInstance.withdraw(weiValue);
 
     await withdrawTx.wait();
+
+    // Get new balances
+    await getAccountDetails(signer._address);
   }
 
   // A function that handles displaying stake of any user
